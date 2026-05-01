@@ -1,0 +1,180 @@
+{
+  "Request": {
+    "Consignee": {
+      "AvailableDays": "",
+      "AvailableTiming": "",
+      "ConsigneeAddress1": "Test Cngee Addr1",
+      "ConsigneeAddress2": "Test Cngee Addr2",
+      "ConsigneeAddress3": "Test Cngee Addr3",
+      "ConsigneeAddressType": "",
+      "ConsigneeAddressinfo": "",
+      "ConsigneeAttention": "",
+      "ConsigneeEmailID": "",
+      "ConsigneeFullAddress": "",
+      "ConsigneeGSTNumber": "",
+      "ConsigneeLatitude": "",
+      "ConsigneeLongitude": "",
+      "ConsigneeMaskedContactNumber": "",
+      "ConsigneeMobile": "9995554441",
+      "ConsigneeName": "Test Consignee Name",
+      "ConsigneePincode": "122001",
+      "ConsigneeStateCode": "",
+      "ConsigneeTelephone": ""
+    },
+    "Returnadds": {
+      "ManifestNumber": "",
+      "ReturnAddress1": "Test RTO Addr1",
+      "ReturnAddress2": "Test RTO Addr2",
+      "ReturnAddress3": "Test RTO Addr3",
+      "ReturnAddressinfo": "",
+      "ReturnContact": "Test RTO",
+      "ReturnEmailID": "",
+      "ReturnLatitude": "",
+      "ReturnLongitude": "",
+      "ReturnMaskedContactNumber": "",
+      "ReturnMobile": "9995554447",
+      "ReturnPincode": "122002",
+      "ReturnTelephone": ""
+    },
+    "Services": {
+      "AWBNo": "",
+      "ActualWeight": "3.50",
+      "CollectableAmount": 0,
+      "Commodity": {
+        "CommodityDetail1": "Test1",
+        "CommodityDetail2": "Test2",
+        "CommodityDetail3": "Test3"
+      },
+      "CreditReferenceNo": "TestCrRe411",
+      "CreditReferenceNo2": "",
+      "CreditReferenceNo3": "",
+      "DeclaredValue": 100,
+      "DeliveryTimeSlot": "",
+      "Dimensions": [
+        {
+          "Breadth": 32.7,
+          "Count": 1,
+          "Height": 3.2,
+          "Length": 28.9
+        }
+      ],
+      "DynamicQCDetails": [
+        {
+          "ExpectedAnswers": "Y",
+          "IsQCMandate": false,
+          "ItemID": "Test ID1",
+          "QuestionDescription": "Test Question",
+          "QuestionId": "Test Q1",
+          "QuestionValue": "Test Q Ans1"
+        },
+        {
+          "ExpectedAnswers": "Y",
+          "IsQCMandate": true,
+          "ItemID": "Test ID1",
+          "QuestionDescription": "Test Question",
+          "QuestionId": "Test Q1",
+          "QuestionValue": "Test Q Ans1"
+        }
+      ],
+      "FavouringName": "",
+      "ForwardAWBNo": "",
+      "ForwardLogisticCompName": "",
+      "InsurancePaidBy": "",
+      "InvoiceNo": "",
+      "IsChequeDD": "",
+      "IsDedicatedDeliveryNetwork": false,
+      "IsForcePickup": false,
+      "IsPartialPickup": false,
+      "IsReversePickup": true,
+      "ItemCount": 1,
+      "Officecutofftime": "",
+      "PDFOutputNotRequired": true,
+      "PackType": "",
+      "ParcelShopCode": "",
+      "PayableAt": "",
+      "PickupDate": "/Date(1666173578794)/",
+      "PickupMode": "",
+      "PickupTime": "1600",
+      "PickupType": "O",
+      "PieceCount": "1",
+      "PreferredPickupTimeSlot": "",
+      "ProductCode": "A",
+      "ProductFeature": "",
+      "ProductType": 1,
+      "RegisterPickup": true,
+      "SpecialInstruction": "",
+      "SubProductCode": "P",
+      "TotalCashPaytoCustomer": 0,
+      "itemImg": [
+        {
+          "AWBNo": "",
+          "ImageURL": "https://m.media-amazon.com/images/I/71MW1E0je-L._SX522_.jpg",
+          "ItemID": "Test ID1"
+        },
+        {
+          "AWBNo": "",
+          "ImageURL": "https://m.media-amazon.com/images/I/61LNnZPoKPS._SL1500_.jpg",
+          "ItemID": "Test ID1"
+        }
+      ],
+      "itemdtl": [
+        {
+          "CGSTAmount": 0,
+          "HSCode": "AB121212",
+          "IGSTAmount": 0,
+          "IGSTRate": 0,
+          "Instruction": "",
+          "InvoiceNumber": "AB122343",
+          "InvoiceDate": "/Date(1685194527183)/",
+          "ItemID": "Test ID1",
+          "ItemName": "APPARELS",
+          "ItemValue": 100,
+          "Itemquantity": 1,
+          "PlaceofSupply": "",
+          "ProductDesc1": "POLO JACKET BLUE",
+          "ProductDesc2": "SIZE-40,",
+          "ReturnReason": "SIZE ISSUE",
+          "SGSTAmount": 0,
+          "SKUNumber": "AB121212",
+          "SellerGSTNNumber": "",
+          "SellerName": "",
+          "SubProduct1": "Test Sub 1",
+          "SubProduct2": "Test Sub 2",
+          "TaxableAmount": 0,
+          "TotalValue": 100,
+          "cessAmount": "0.0",
+          "countryOfOrigin": "IN",
+          "docType": "INV",
+          "subSupplyType": 7,
+          "supplyType": "I"
+        }
+      ],
+      "noOfDCGiven": 0
+    },
+    "Shipper": {
+      "CustomerAddress1": "Test Cust Addr1",
+      "CustomerAddress2": "Test Cust Addr2",
+      "CustomerAddress3": "Test Cust Addr3",
+      "CustomerAddressinfo": "",
+      "CustomerCode": "246525",
+      "CustomerEmailID": "TestCustEmail@bd.com",
+      "CustomerGSTNumber": "",
+      "CustomerLatitude": "",
+      "CustomerLongitude": "",
+      "CustomerMaskedContactNumber": "",
+      "CustomerMobile": "9996665554",
+      "CustomerName": "Test Cust Name",
+      "CustomerPincode": "400099",
+      "CustomerTelephone": "",
+      "IsToPayCustomer": true,
+      "OriginArea": "DEL",
+      "Sender": "ABCDEFG",
+      "VendorCode": ""
+    }
+  },
+  "Profile": {
+    "LoginID": "APIID",
+    "LicenceKey": "APIKEY",
+    "Api_type": "S"
+  }
+}

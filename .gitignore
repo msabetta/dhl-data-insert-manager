@@ -1,0 +1,79 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.env
+.venv/
+
+# =========================
+# FastAPI / Uvicorn
+# =========================
+*.log
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.local
+.env.*.local
+
+# =========================
+# IDE / Editors
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# =========================
+# Testing
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# MyPy / type check
+# =========================
+.mypy_cache/
+.dmypy.json
+
+# =========================
+# Build / packaging
+# =========================
+build/
+dist/
+*.egg-info/
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+
+# =========================
+# API / DHL generated files
+# =========================
+label_*.pdf
+*.label.pdf
+
+# =========================
+# Logs custom middleware DHL
+# =========================
+logs/
+dhl_logs/
+*.log
+
+# =========================
+# SAP integration artifacts (if used)
+# =========================
+*.idoc
+*.xml
+*.tmp

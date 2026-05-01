@@ -1,0 +1,25 @@
+{
+  "shipper": {
+    "name": "Company SRL",
+    "address": "Via Roma 1",
+    "city": "Napoli",
+    "postal_code": "80100",
+    "country": "IT",
+    "phone": "+390801234567"
+  },
+  "receiver": {
+    "name": "Mario Rossi",
+    "address": "Via Milano 10",
+    "city": "Milano",
+    "postal_code": "20100",
+    "country": "IT",
+    "phone": "+393331234567"
+  },
+  "package": {
+    "weight": 5,
+    "length": 30,
+    "width": 20,
+    "height": 10
+  },
+  "service": "P"
+}
