@@ -1,0 +1,87 @@
+# main.py
+from fastapi import FastAPI, HTTPException, Header
+from typing import Optional
+from schemas import (
+    GenerateWayBillRequest, 
+    CancelWayBillRequest, 
+    UpdateWayBillRequest, 
+    ImportDataRequest
+)
+from dhl_service import (
+    generate_waybill, 
+    cancel_waybill, 
+    update_waybill, 
+    import_data,
+    login
+)
+
+app = FastAPI(title="DHL Middleware API")
+
+@app.get("/health")
+def health():
+    return {"status": "OK"}
+
+@app.post("/token")
+def get_token():
+    try:
+        result = login()
+        return {
+            "message": "Token generato",
+            "result": result
+        }
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=str(e))
+
+def extract_token(authorization: Optional[str]) -> Optional[str]:
+    if authorization and authorization.startswith("Bearer "):
+        return authorization.split(" ")[1]
+    return None
+
+@app.post("/waybill/GenerateWayBill")
+def generate(data: GenerateWayBillRequest, authorization: Optional[str] = Header(None)):
+    token = extract_token(authorization)
+    try:
+        result = generate_waybill(data, token=token)
+        return {
+            "message": "Waybill generata",
+            "result": result
+        }
+    except Exception as e:
+        # Restituiamo 400 se l'errore arriva da BlueDart (solitamente Bad Request)
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/waybill/CancelWayBill")
+def cancel(data: CancelWayBillRequest, authorization: Optional[str] = Header(None)):
+    token = extract_token(authorization)
+    try:
+        result = cancel_waybill(data, token=token)
+        return {
+            "message": "Waybill cancellata",
+            "result": result
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/waybill/UpdateEwayBill")
+def update_eway(data: UpdateWayBillRequest, authorization: Optional[str] = Header(None)):
+    token = extract_token(authorization)
+    try:
+        result = update_waybill(data, token=token)
+        return {
+            "message": "eWayBill aggiornata",
+            "result": result
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/importData")
+def import_d(data: ImportDataRequest, authorization: Optional[str] = Header(None)):
+    token = extract_token(authorization)
+    try:
+        result = import_data(data, token=token)
+        return {
+            "message": "Dati importati",
+            "result": result
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

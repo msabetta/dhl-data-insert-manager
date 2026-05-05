@@ -1,0 +1,15 @@
+{
+ "ERequest": {
+    "InvoiceDate": "/Date(1684748434000)/",
+    "InvoiceNumber": "Test Inv1",
+    "SellerGSTNo": "09565720209C",
+    "Waybillnumber": "20470326332",
+    "eWaybillDate": "/Date(1684748434000)/",
+    "eWaybillNumber": "125478547851"
+  },
+  "Profile": {
+    "LoginID": "APIID",
+    "LicenceKey": "[ENCRYPTION_KEY]",
+    "Api_type": "S"
+  }
+}

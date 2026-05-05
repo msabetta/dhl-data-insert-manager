@@ -1,0 +1,112 @@
+{
+  "Request": [
+    {
+      "Consignee": {
+        "ConsigneeGSTNumber": "27AACCM9393L9ZZ",
+        "ConsigneeTelephone": "+911451441144",
+        "ConsigneeEmailID": "[EMAIL_ADDRESS]",
+        "ConsigneeMobile": "9141554114",
+        "ConsigneeLatitude": "12.9716",
+        "ConsigneeName": "Mario",
+        "ConsigneeAddress2": "string",
+        "ConsigneeAddressType": "R",
+        "ConsigneeAddress1": "string",
+        "ConsigneeAddress3": "string",
+        "ConsigneePincode": "110027",
+        "ConsigneeAttention": "Mario",
+        "ConsigneeLongitude": "12.9716",
+        "ConsigneeMaskedContactNumber": "string"
+      },
+      "Services": {
+        "SpecialInstruction": "string",
+        "PieceCount": "2",
+        "PickupTime": "1600",
+        "ActualWeight": "1",
+        "PackType": "B",
+        "ProductCode": "E",
+        "RegisterPickup": true,
+        "PDFOutputNotRequired": false,
+        "ProductType": 0,
+        "Dimensions": [
+          {
+            "Length": 1,
+            "Breadth": 1,
+            "Height": 1,
+            "Count": 1
+          }
+        ],
+        "ECCN": "string",
+        "itemdtl": [
+          {
+            "ItemID": "1",
+            "ItemName": "string",
+            "ProductDesc1": "string",
+            "ProductDesc2": "string",
+            "SubProduct1": "string",
+            "SubProduct2": "string",
+            "SubProduct3": "string",
+            "SubProduct4": "string",
+            "ReturnReason": "string",
+            "Instruction": "string",
+            "ItemValue": "string",
+            "SKUNumber": "string",
+            "Itemquantity": "string",
+            "countryOfOrigin": "string",
+            "HSCode": "string",
+            "TaxableAmount": "string",
+            "CGSTAmount": "string",
+            "SGSTAmount": "string",
+            "IGSTAmount": "string",
+            "CESSAmount": "string"
+          }
+        ],
+        "PickupDate": "/Date(1683376344000)/",
+        "noOfDCGiven": 0,
+        "AWBNo": "1234567890",
+        "OTPCode": "123445",
+        "Commodity": {},
+        "OTPBasedDelivery": 0,
+        "SubProductCode": "string",
+        "CreditReferenceNo": "20470326332"
+      },
+      "Shipper": {
+        "CustomerLongitude": "12.9716",
+        "CustomerMobile": "9141554114",
+        "CustomerGSTNumber": "27AACCM9393L9ZZ",
+        "CustomerCode": "246525",
+        "OriginArea": "DEL",
+        "Sender": "NDACENTER",
+        "CustomerPincode": "110027",
+        "CustomerTelephone": "+911451441144",
+        "CustomerEmailID": "[EMAIL_ADDRESS]",
+        "IsToPayCustomer": "Y",
+        "CustomerAddress3": "string",
+        "CustomerAddress2": "string",
+        "VendorCode": "NDACENTER",
+        "CustomerName": "John Doe",
+        "CustomerAddress1": "123 Main St",
+        "CustomerMaskedContactNumber": "+911451441144",
+        "CustomerLatitude": "12.9716"
+      },
+      "Returnadds": {
+        "ManifestNumber": "string",
+        "ReturnMobile": "9141554114",
+        "ReturnPincode": "110027",
+        "ReturnEmailID": "[EMAIL_ADDRESS]",
+        "ReturnContact": "Mario",
+        "ReturnMaskedContactNumber": "+911451441144",
+        "ReturnTelephone": "+911451441144",
+        "ReturnAddress3": "string",
+        "ReturnAddress2": "string",
+        "ReturnAddress1": "123 Main St",
+        "ReturnLatitude": "string",
+        "ReturnLongitude": "string"
+      }
+    }
+  ],
+  "Profile": {
+    "LoginID": "APIID",
+    "LicenceKey": "APIKEY",
+    "Api_type": "S"
+  }
+}

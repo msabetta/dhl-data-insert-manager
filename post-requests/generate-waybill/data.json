@@ -1,0 +1,81 @@
+{
+  "Request": {
+    "Consignee": {
+      "ConsigneeAddress1": "Test Cngee Addr1",
+      "ConsigneeAddress2": "Test Cngee Addr2",
+      "ConsigneeAddress3": "Test Cngee Addr3",
+      "ConsigneeAddressType": "R",
+      "ConsigneeAttention": "ABCD",
+      "ConsigneeEmailID": "",
+      "ConsigneeGSTNumber": "",
+      "ConsigneeLatitude": "",
+      "ConsigneeLongitude": "",
+      "ConsigneeMaskedContactNumber": "",
+      "ConsigneeMobile": 9995554441,
+      "ConsigneeName": "Test Consignee Name",
+      "ConsigneePincode": 110027,
+      "ConsigneeTelephone": ""
+    },
+    "Returnadds": {
+      "ManifestNumber": "",
+      "ReturnAddress1": "Test RTO Addr1",
+      "ReturnAddress2": "Test RTO Addr2",
+      "ReturnAddress3": "Test RTO Addr3",
+      "ReturnContact": "Test RTO",
+      "ReturnEmailID": "",
+      "ReturnLatitude": "",
+      "ReturnLongitude": "",
+      "ReturnMaskedContactNumber": "",
+      "ReturnMobile": 9995554447,
+      "ReturnPincode": 400057,
+      "ReturnTelephone": ""
+    },
+    "Services": {
+      "AWBNo": "",
+      "ActualWeight": 0.5,
+      "CollectableAmount": 0,
+      "Commodity": {},
+      "CreditReferenceNo": "TestCr3",
+      "DeclaredValue": 0,
+      "Dimensions": [],
+      "PDFOutputNotRequired": true,
+      "PackType": "",
+      "PickupDate": "/Date(1683376344000)/",
+      "PickupTime": "1600",
+      "PieceCount": 1,
+      "ProductCode": "D",
+      "ProductType": 0,
+      "RegisterPickup": true,
+      "SpecialInstruction": "",
+      "SubProductCode": "",
+      "OTPBasedDelivery": 0,
+      "OTPCode": "",
+      "itemdtl": [],
+      "noOfDCGiven": 0
+    },
+    "Shipper": {
+      "CustomerAddress1": "Test Cust Addr1",
+      "CustomerAddress2": "Test Cust Addr2",
+      "CustomerAddress3": "Test Cust Addr3",
+      "CustomerCode": 246525,
+      "CustomerEmailID": "",
+      "CustomerGSTNumber": "",
+      "CustomerLatitude": "",
+      "CustomerLongitude": "",
+      "CustomerMaskedContactNumber": "",
+      "CustomerMobile": 9996665554,
+      "CustomerName": "Test Cust Name",
+      "CustomerPincode": 110030,
+      "CustomerTelephone": "",
+      "IsToPayCustomer": false,
+      "OriginArea": "DEL",
+      "Sender": "NDACENTER",
+      "VendorCode": ""
+    }
+  },
+  "Profile": {
+    "LoginID": "APIID",
+    "LicenceKey": "APIKEY",
+    "Api_type": "S"
+  }
+}

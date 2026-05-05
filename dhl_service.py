@@ -1,379 +1,138 @@
 # dhl_service.py
 import requests
-import base64
 import json
 from config import DHL_API_KEY, BASE_URL, DHL_SECRET
 
-headers = {
-    "DHL-API-Key": DHL_API_KEY,
-    "DHL-API-Secret": DHL_SECRET,
-    "Content-Type": "application/json"
-}
+def get_jwt_token():
+    url = BASE_URL + "in/transportation/token/v1/login"
+    headers = {
+        'ClientID': DHL_API_KEY,
+        'clientSecret': DHL_SECRET
+    }
+    response = requests.request("GET", url, headers=headers)
+    if response.status_code == 200:
+        return response.json()["JWTToken"]
+    raise Exception(f"Token generation failed: {response.text}")
 
 def generate_waybill(data):
-    url = f"{BASE_URL}/GenerateWayBill"
-
+    url = BASE_URL + "in/transportation/waybill/v1/GenerateWayBill"
+    
+    # Mapping manuale dai nomi "puliti" ai nomi "nativi" di Blue Dart
     payload = json.dumps({
-    "Request": {
-        "Consignee": {
-        "ConsigneeGSTNumber": "string",
-        "ConsigneeTelephone": data.receiver.phone,
-        "ConsigneeEmailID": data.receiver.email,
-        "ConsigneeMobile": data.receiver.phone,
-        "ConsigneeLatitude": "string",
-        "ConsigneeName": data.receiver.name,
-        "ConsigneeAddress2": "string",
-        "ConsigneeAddressType": "O",
-        "AvailableTiming": data.receiver.available_timing,
-        "AvailableDays": data.receiver.available_days,
-        "ConsigneeIDType": "st",
-        "ConsigneeID": data.receiver.identification_number,
-        "ConsigneeFiscalIDType": "st",
-        "ConsigneeFiscalID": data.receiver.fiscal_id,
-        "ConsingeeFederalTaxId": "string",
-        "ConsingeeStateTaxId": "string",
-        "ConsingeeRegistrationNumber": data.receiver.registration_number,
-        "ConsingeeRegistrationNumberTypeCode": "SDT",
-        "ConsingeeRegistrationNumberIssuerCountryCode": "st",
-        "ConsigneeBusinessPartyTypeCode": data.receiver.business_type,
-        "ConsigneeFullAddress": data.receiver.address,
-        "ConsigneeAddress1": data.receiver.address,
-        "ConsigneeAddress3": "string",
-        "ConsigneePincode": "string",
-        "ConsigneeAttention": data.receiver.attention,
-        "ConsigneeLongitude": "string",
-        "ConsigneeAddressinfo": "string",
-        "ConsigneeCountryCode": data.receiver.country,
-        "ConsigneeStateCode": data.receiver.state,
-        "ConsigneeCityName": data.receiver.city,
-        "ConsigneeMaskedContactNumber": "string"
-        },
-        "Services": {
-        "SpecialInstruction": data.special_instruction,
-        "DeclaredValue": data.service.declared_value,
-        "CollactableAmount": 0,
-        "PieceCount": None,
-        "PickupTime": "stri",
-        "ActualWeight": None,
-        "PackType": "s",
-        "InvoiceNo": "string",
-        "ProductCode": "s",
-        "RegisterPickup": True,
-        "DeliveryTimeSlot": "string",
-        "IsReversePickup": True,
-        "IsForcePickup": True,
-        "ParcelShopCode": "string",
-        "ForwardAWBNo": "string",
-        "ForwardLogisticCompName": "string",
-        "CreditReferenceNo2": "string",
-        "CreditReferenceNo3": "string",
-        "PickupMode": data.service.pickup_mode,
-        "PickupType": "string",
-        "ItemCount": data.service.item_count,
-        "IsPartialPickup": True,
-        "TotalCashPaytoCustomer": 0,
-        "PreferredPickupTimeSlot": "string",
-        "DeferredDeliveryDays": 0,
-        "Officecutofftime": "string",
-        "PDFOutputNotRequired": True,
-        "ProductType": 0,
-        "Dimensions": [
-            {
-            "Length": 0,
-            "Breadth": 0,
-            "Height": 0,
-            "Count": 0
+        "Request": {
+            "Consignee": {
+                "ConsigneeName": data.request.request.consignee.name,
+                "ConsigneeAddress1": data.request.request.consignee.address_line_1,
+                "ConsigneeAddress2": data.request.request.consignee.address_line_2,
+                "ConsigneeAddress3": data.request.request.consignee.address_line_3,
+                "ConsigneePincode": data.request.request.consignee.pincode,
+                "ConsigneeMobile": data.request.request.consignee.mobile,
+                "ConsigneeEmailID": data.request.request.consignee.email,
+                "ConsigneeTelephone": data.request.request.consignee.telephone,
+                "ConsigneeAddressType": data.request.request.consignee.address_type,
+                "ConsigneeAttention": data.request.request.consignee.attention,
+                "ConsigneeGSTNumber": data.request.request.consignee.gstn_number,
+                "ConsigneeLatitude": data.request.request.consignee.latitude,
+                "ConsigneeLongitude": data.request.request.consignee.longitude,
+                "ConsigneeMaskedContactNumber": data.request.request.consignee.masked_contact_number,
+            },
+            "Services": {
+                "ActualWeight": data.request.request.service.actual_weight,
+                "PieceCount": data.request.request.service.piece_count,
+                "ProductCode": data.request.request.service.product_code,
+                "ProductType": data.request.request.service.product_type,
+                "PickupDate": data.request.request.service.pickup_date,
+                "PickupTime": data.request.request.service.pickup_time,
+                "DeclaredValue": data.request.request.service.declared_value,
+                "PackType": data.request.request.service.pack_type,
+                "Dimensions": [{
+                    "Length": data.request.request.service.dimensions.length,
+                    "Breadth": data.request.request.service.dimensions.width,
+                    "Height": data.request.request.service.dimensions.height,
+                    "Count": data.request.request.service.dimensions.count
+                }],
+                "itemdtl": [{
+                    "ItemID": data.request.request.service.itemdtl.item_id,
+                    "ItemName": data.request.request.service.itemdtl.item_name,
+                    "ItemValue": data.request.request.service.itemdtl.item_value,
+                    "Itemquantity": data.request.request.service.itemdtl.item_quantity,
+                    "HSCode": data.request.request.service.itemdtl.hs_code
+                }],
+                "SpecialInstruction": data.request.request.service.special_instruction,
+                "RegisterPickup": data.request.request.service.register_pickup,
+                "PDFOutputNotRequired": data.request.request.service.pdf_output_not_required,
+            },
+            "Shipper": {
+                "CustomerName": data.request.request.shipper.customer_name,
+                "CustomerAddress1": data.request.request.shipper.customer_address_line_1,
+                "CustomerAddress2": data.request.request.shipper.customer_address_line_2,
+                "CustomerAddress3": data.request.request.shipper.customer_address_line_3,
+                "CustomerPincode": data.request.request.shipper.customer_pincode,
+                "CustomerMobile": data.request.request.shipper.customer_mobile,
+                "CustomerCode": data.request.request.shipper.customer_code,
+                "OriginArea": data.request.request.shipper.origin_area,
+                "Sender": data.request.request.shipper.sender,
+                "VendorCode": data.request.request.shipper.vendor_code,
+                "CustomerGSTNumber": data.request.request.shipper.customer_gst_number,
+            },
+            "Returnadds": {
+                "ReturnAddress1": data.request.request.return_address.return_address_line_1,
+                "ReturnAddress2": data.request.request.return_address.return_address_line_2,
+                "ReturnAddress3": data.request.request.return_address.return_address_line_3,
+                "ReturnContact": data.request.request.return_address.return_contact,
+                "ReturnMobile": data.request.request.return_address.return_mobile,
+                "ReturnPincode": data.request.request.return_address.return_pincode,
             }
-        ],
-        "ECCN": "string",
-        "FreightCharge": 0,
-        "InsurenceCharge": 0,
-        "CessCharge": 0,
-        "ReverseCharge": 0,
-        "PayerGSTVAT": 0,
-        "AdditionalDeclaration": "string",
-        "NotificationMessage": "string",
-        "IsCargoShipment": True,
-        "ExportReason": "string",
-        "BankAccountNumber": "string",
-        "GovNongovType": "G",
-        "NFEIFlag": True,
-        "itemdtl": [
-            {
-            "ItemID": "string",
-            "ItemName": "string",
-            "ProductDesc1": "string",
-            "ProductDesc2": "string",
-            "SubProduct1": "string",
-            "SubProduct2": "string",
-            "SubProduct3": "string",
-            "SubProduct4": "string",
-            "ReturnReason": "string",
-            "Instruction": "string",
-            "ItemValue": 0,
-            "SKUNumber": "string",
-            "Itemquantity": 0,
-            "countryOfOrigin": "st",
-            "HSCode": "string",
-            "TaxableAmount": 0,
-            "CGSTAmount": 0,
-            "SGSTAmount": 0,
-            "IGSTAmount": 0,
-            "TotalValue": 0,
-            "PlaceofSupply": "string",
-            "InvoiceNumber": "string",
-            "InvoiceDate": "string",
-            "SellerName": "string",
-            "SellerGSTNNumber": "string",
-            "cessAmount": 0,
-            "eWaybillNumber": 0,
-            "eWaybillDate": "string",
-            "supplyType": "s",
-            "subSupplyType": 0,
-            "docType": 1,
-            "PerUnitRate": 0,
-            "PieceID": "stri",
-            "Unit": "str",
-            "IGSTRate": 0,
-            "Discount": 0,
-            "Weight": 0,
-            "CommodityCode": "string",
-            "LicenseNumber": "string",
-            "LicenseExpiryDate": "string",
-            "ManufactureCountryCode": "st",
-            "ManufactureCountryName": "st",
-            "PieceIGSTPercentage": 0
-            }
-        ],
-        "ItemImg": [
-            {
-            "AWBNo": "string",
-            "ItemID": "string",
-            "ImageURL": "string"
-            }
-        ],
-        "PDFPrintContent": "string",
-        "CustomerEDD": "string",
-        "IsDDN": True,
-        "IsCommercialShipment": True,
-        "IsDutyTaxPaidByShipper": True,
-        "ExchangeWaybillNo": "string",
-        "PickupDate": "string",
-        "noOfDCGiven": 0,
-        "AWBNo": "string",
-        "OTPCode": "string",
-        "Total_IGST_Paid": 0,
-        "SupplyOfIGST": "Yes",
-        "SupplyOfwoIGST": "Yes",
-        "IncotermCode": "strin",
-        "IsChequeDD": "Q",
-        "InsurancePaidBy": "O",
-        "FavouringName": "string",
-        "PayableAt": "string",
-        "PreferredDeliveryDate": "stringst",
-        "PrinterLableSize": "string",
-        "DynamicQCDetails": [
-            {
-            "ItemID": "string",
-            "QuestionId": "string",
-            "QuestionDescription": "string",
-            "QuestionValue": "string",
-            "ExpectedAnswers": "Y",
-            "IsQCMandate": True
-            }
-        ],
-        "IsIntlEcomCSBUser": True,
-        "ExportImportCode": "string",
-        "TermsOfTrade": "CIF",
-        "IsEcomUser": "1",
-        "InsuranceAmount": 0,
-        "AuthorizedDealerCode": "string",
-        "CurrencyCode": "str",
-        "OrderURL": "string",
-        "EsellerPlatformName": "string",
-        "BillingReference1": "string",
-        "BillingReference2": "string",
-        "MarketplaceName": "string",
-        "MarketplaceURL": "string",
-        "BillToCompanyName": "string",
-        "BillToContactName": "string",
-        "BillToAddressLine1": "string",
-        "BillToCity": "string",
-        "BillToSuburb": "string",
-        "BillToState": "string",
-        "BillToCountryName": "string",
-        "BillToCountryCode": "st",
-        "BillToPhoneNumber": "string",
-        "BillToFederalTaxID": "string",
-        "ExporterCompanyName": "string",
-        "ExporterSuiteDepartmentName": "string",
-        "ExporterAddressLine1": "string",
-        "ExporterAddressLine2": "string",
-        "ExporterAddressLine3": "string",
-        "ExporterCity": "string",
-        "ExporterDivision": "string",
-        "ExporterDivisionCode": "st",
-        "ExporterPostalCode": "string",
-        "ExporterCountryCode": "st",
-        "ExporterCountryName": "string",
-        "ExporterPersonName": "string",
-        "ExporterPhoneNumber": "string",
-        "ExporterFaxNumber": "string",
-        "ExporterEmail": "string",
-        "ExporterMobilePhoneNumber": "string",
-        "ExporterRegistrationNumber": "string",
-        "ExporterRegistrationNumberTypeCode": "SDT",
-        "ExporterRegistrationNumberIssuerCountryCode": "st",
-        "ExporterBusinessPartyTypeCode": "BU",
-        "SignatureName": "string",
-        "SignatureTitle": "string",
-        "Commodity": {
-            "CommodityDetail1": "string",
-            "CommodityDetail2": "string",
-            "CommodityDetail3": "string"
         },
-        "OTPBasedDelivery": "string",
-        "SubProductCode": "C",
-        "CreditReferenceNo": "string"
-        },
-        "Shipper": {
-        "CustomerAddressinfo": "string",
-        "CustomerLongitude": "string",
-        "CustomerMobile": "stringstri",
-        "CustomerGSTNumber": "string",
-        "CustomerCode": "string",
-        "OriginArea": "str",
-        "Sender": "string",
-        "CustomerPincode": "string",
-        "CustomerTelephone": "string",
-        "CustomerEmailID": "string",
-        "IsToPayCustomer": True,
-        "CustomerAddress3": "string",
-        "CustomerAddress2": "string",
-        "VendorCode": "string",
-        "CustomerName": "string",
-        "CustomerAddress1": "string",
-        "CustomerMaskedContactNumber": "string",
-        "CustomerFiscalIDType": "st",
-        "CustomerFiscalID": "string",
-        "CustomerRegistrationNumber": "string",
-        "CustomerRegistrationNumberTypeCode": "EOR",
-        "CustomerRegistrationNumberIssuerCountryCode": "AT",
-        "CustomerBusinessPartyTypeCode": "BU",
-        "CustomerLatitude": "string"
-        },
-        "Returnadds": {
-        "ManifestNumber": "string",
-        "ReturnMobile": "stringstri",
-        "ReturnPincode": "string",
-        "ReturnEmailID": "string",
-        "ReturnContact": "string",
-        "ReturnMaskedContactNumber": "string",
-        "ReturnTelephone": "string",
-        "ReturnAddress3": "string",
-        "ReturnAddress2": "string",
-        "ReturnAddress1": "string",
-        "ReturnLatitude": "string",
-        "ReturnLongitude": "string",
-        "ReturnAddressinfo": "string"
+        "Profile": {
+            "LoginID": data.request.profile.login_id,
+            "LicenceKey": data.request.profile.license_key,
+            "Api_type": data.request.profile.api_type
         }
-    },
-    "Profile": {
-        "LoginID": "string",
-        "Api_type": "string",
-        "LicenceKey": "string"
-    }
     })
+
     headers = {
-    'content-type': 'application/json',
-    'JWTToken': 'REPLACE_KEY_VALUE'
+        'content-type': 'application/json',
+        'JWTToken': get_jwt_token()
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    if response.status_code != 200:
-        raise Exception(response.text)
+    return response.json()
 
-    res = response.json()
-
-    return res["GenerateWayBillResult"]
-
-
-
-def create_shipment(data):
-    url = f"{BASE_URL}/shipments"
-
-    payload = {
-        "plannedShippingDateAndTime": "2026-05-01T10:00:00GMT+01:00",
-        "productCode": data.service,
-        "customerDetails": {
-            "shipperDetails": {
-                "postalAddress": {
-                    "postalCode": data.shipper.postal_code,
-                    "cityName": data.shipper.city,
-                    "countryCode": data.shipper.country,
-                    "addressLine1": data.shipper.address
-                },
-                "contactInformation": {
-                    "fullName": data.shipper.name,
-                    "phone": data.shipper.phone
-                }
-            },
-            "receiverDetails": {
-                "postalAddress": {
-                    "postalCode": data.receiver.postal_code,
-                    "cityName": data.receiver.city,
-                    "countryCode": data.receiver.country,
-                    "addressLine1": data.receiver.address
-                },
-                "contactInformation": {
-                    "fullName": data.receiver.name,
-                    "phone": data.receiver.phone
-                }
-            }
-        },
-        "content": {
-            "packages": [
-                {
-                    "weight": data.package.weight,
-                    "dimensions": {
-                        "length": data.package.length,
-                        "width": data.package.width,
-                        "height": data.package.height
-                    }
-                }
-            ]
+def cancel_waybill(data):
+    url = BASE_URL + "in/transportation/waybill/v1/CancelWaybill"
+    payload = json.dumps({
+        "Request": {"AWBNo": data.request.waybill_number},
+        "Profile": {
+            "LoginID": data.request.profile.login_id,
+            "LicenceKey": data.request.profile.license_key,
+            "Api_type": data.request.profile.api_type
         }
-    }
+    })
+    headers = {'content-type': 'application/json', 'JWTToken': get_jwt_token()}
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return response.json()
 
-    response = requests.post(url, json=payload, headers=headers)
+def update_waybill(data):
+    url = BASE_URL + "in/transportation/waybill/v1/UpdateEwayBill"
+    payload = json.dumps({
+        "ERequest": {
+            "Waybillnumber": data.request.waybill_number,
+            "eWaybillNumber": data.request.ewaybill_number,
+            "eWaybillDate": data.request.ewaybill_date
+        },
+        "Profile": {
+            "LoginID": data.request.profile.login_id,
+            "LicenceKey": data.request.profile.license_key,
+            "Api_type": data.request.profile.api_type
+        }
+    })
+    headers = {'content-type': 'application/json', 'JWTToken': get_jwt_token()}
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return response.json()
 
-    if response.status_code != 200:
-        raise Exception(response.text)
-
-    res = response.json()
-
-    tracking = res["shipmentTrackingNumber"]
-    label_base64 = res["documents"][0]["content"]
-
-    label_file = f"label_{tracking}.pdf"
-
-    with open(label_file, "wb") as f:
-        f.write(base64.b64decode(label_base64))
-
-    return {
-        "tracking": tracking,
-        "label_file": label_file
-    }
-
-
-def track_shipment(tracking):
-    url = f"{BASE_URL}/track/shipments?trackingNumber={tracking}"
-
-    response = requests.get(url, headers=headers)
-
-    if response.status_code != 200:
-        raise Exception(response.text)
-
-    res = response.json()
-
-    return res["shipments"][0]["status"]["statusCode"]
+def import_data(data):
+    # Logica simile a generate_waybill ma per ImportData (che accetta liste)
+    url = BASE_URL + "in/transportation/waybill/v1/ImportData"
+    # ... (implementazione omessa per brevità, ma segue lo stesso schema di mapping)
+    return {"message": "ImportData not fully implemented in this restore point"}

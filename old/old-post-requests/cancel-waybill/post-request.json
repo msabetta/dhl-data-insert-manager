@@ -1,0 +1,10 @@
+{
+  "Request": {
+    "AWBNo": "89186876973"
+  },
+  "Profile": {
+    "Api_type": "S",
+    "LicenceKey": "APIKEY",
+    "LoginID": "APIID"
+  }
+}

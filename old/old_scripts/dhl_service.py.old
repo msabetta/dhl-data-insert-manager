@@ -1,0 +1,112 @@
+# dhl_service.py
+import requests
+import json
+import os
+from config import DHL_API_KEY, BASE_URL, DHL_SECRET
+
+def get_dhl_token():
+    """Genera un nuovo JWT Token per BlueDart/DHL API Gateway"""
+    login_url = "https://apigateway-sandbox.bluedart.com/in/transportation/token/v1/login"
+    auth_headers = {
+        "clientID": DHL_API_KEY,
+        "clientSecret": DHL_SECRET
+    }
+    try:
+        response = requests.get(login_url, headers=auth_headers)
+        if response.status_code == 200:
+            return response.json().get("JWTToken")
+        return None
+    except Exception:
+        return None
+
+def login():
+    """Genera token e salva le credenziali in uso su un file JSON"""
+    token = get_dhl_token()
+    if token:
+        # Salvataggio delle credenziali su file JSON
+        creds_data = {
+            "JWTToken": token
+        }
+        with open("session_credentials.json", "w") as f:
+            json.dump(creds_data, f, indent=4)
+            
+        return creds_data
+    return {"error": "Autenticazione fallita"}
+
+def _get_headers(token):
+    return {
+        'Content-Type': 'application/json',
+        'JWTToken': token,
+        'Authorization': f'Bearer {token}',
+        'clientID': DHL_API_KEY,
+        'clientSecret': DHL_SECRET
+    }
+
+def _handle_response(response, result_key):
+    if response.status_code != 200:
+        error_msg = response.text if response.text else f"Errore BlueDart: {response.status_code}"
+        raise Exception(error_msg)
+    
+    try:
+        res_json = response.json()
+        if result_key in res_json:
+            return res_json[result_key]
+        return res_json
+    except Exception:
+        raise Exception(f"Risposta BlueDart non valida: {response.text}")
+
+def generate_waybill(data, token=None):
+    url = f"{BASE_URL.rstrip('/')}/GenerateWayBill"
+    payload = data.model_dump()
+    
+    if "Profile" in payload:
+        payload["Profile"]["LoginID"] = BLUE_DART_LOGIN_ID
+        payload["Profile"]["LicenceKey"] = BLUE_DART_LICENCE_KEY
+
+    jwt_token = token if token else get_dhl_token()
+    headers = _get_headers(jwt_token)
+
+    response = requests.request("POST", url, headers=headers, json=payload)
+    return _handle_response(response, "GenerateWayBillResult")
+
+def cancel_waybill(data, token=None):
+    url = f"{BASE_URL.rstrip('/')}/CancelWaybill"
+    payload = data.model_dump()
+    
+    if "Profile" in payload:
+        payload["Profile"]["LoginID"] = BLUE_DART_LOGIN_ID
+        payload["Profile"]["LicenceKey"] = BLUE_DART_LICENCE_KEY
+
+    jwt_token = token if token else get_dhl_token()
+    headers = _get_headers(jwt_token)
+
+    response = requests.request("POST", url, headers=headers, json=payload)
+    return _handle_response(response, "CancelWayBillResult")
+
+def update_waybill(data, token=None):
+    url = f"{BASE_URL.rstrip('/')}/UpdateEwayBill"
+    payload = data.model_dump()
+    
+    if "Profile" in payload:
+        payload["Profile"]["LoginID"] = BLUE_DART_LOGIN_ID
+        payload["Profile"]["LicenceKey"] = BLUE_DART_LICENCE_KEY
+
+    jwt_token = token if token else get_dhl_token()
+    headers = _get_headers(jwt_token)
+
+    response = requests.request("POST", url, headers=headers, json=payload)
+    return _handle_response(response, "UpdateEwayBillResult")
+
+def import_data(data, token=None):
+    url = f"{BASE_URL.rstrip('/')}/ImportData"
+    payload = data.model_dump()
+
+    if "Profile" in payload:
+        payload["Profile"]["LoginID"] = BLUE_DART_LOGIN_ID
+        payload["Profile"]["LicenceKey"] = BLUE_DART_LICENCE_KEY
+
+    jwt_token = token if token else get_dhl_token()
+    headers = _get_headers(jwt_token)
+
+    response = requests.request("POST", url, headers=headers, json=payload)
+    return _handle_response(response, "ImportDataResult")

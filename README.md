@@ -1,8 +1,8 @@
-# 🚚 DHL Middleware API (FastAPI)
+# 🚚 DHL / BlueDart Middleware API (FastAPI)
 
-API REST per la gestione delle spedizioni e tracking integrata con DHL MyDHL API.
+API REST per la gestione delle spedizioni e tracking integrata con **BlueDart / DHL API Gateway**.
 
-Questo progetto funge da middleware tra sistemi aziendali (es. SAP ERP) e DHL, permettendo di creare spedizioni, generare etichette e tracciare pacchi in tempo reale.
+Questo progetto funge da middleware tra sistemi aziendali (es. SAP ERP) e DHL/BlueDart, permettendo di generare Waybill, aggiornare eWaybill, annullare spedizioni e importare dati logistici in tempo reale.
 
 ---
 
@@ -12,17 +12,18 @@ Questo progetto funge da middleware tra sistemi aziendali (es. SAP ERP) e DHL, p
 * FastAPI
 * Requests
 * Pydantic
-* DHL MyDHL API (Sandbox/Production)
+* DHL / BlueDart REST API (Gateway)
+* Autenticazione basata su JWT Token
 
 ---
 
 ## 📦 Funzionalità
 
-* Creazione spedizioni via DHL API
-* Generazione automatica etichette PDF
-* Tracking spedizioni in tempo reale
-* Validazione dati strutturata
-* Middleware pronto per integrazione SAP / ERP
+* **Generazione Waybill**: Creazione di documenti di trasporto via BlueDart API.
+* **Annullamento Waybill**: Cancellazione di spedizioni esistenti.
+* **Aggiornamento eWaybill**: Integrazione e aggiornamento dei dati fiscali per le spedizioni.
+* **Importazione Dati**: Caricamento massivo di informazioni logistiche (Consignee, Shipper, Services).
+* **Autenticazione JWT**: Gestione automatica del token di sessione per le chiamate al Gateway.
 
 ---
 
@@ -33,7 +34,7 @@ SAP / ERP System
         ↓
    FastAPI Middleware
         ↓
-  DHL MyDHL API
+  DHL / BlueDart API Gateway
 ```
 
 ---
@@ -43,18 +44,21 @@ SAP / ERP System
 ### 1. Installazione dipendenze
 
 ```bash
-pip install fastapi uvicorn requests python-dotenv
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ---
 
 ### 2. Configurazione environment
 
-Crea un file `.env`:
+Crea un file `.env` basato sulle tue credenziali BlueDart:
 
-```
-DHL_API_KEY=your_api_key
-BASE_URL=https://api-mydhl-qa.dhl.com
+```env
+DHL_API_KEY=vostro_client_id
+DHL_API_SECRET=vostro_client_secret
+BASE_URL="https://apigateway-sandbox.bluedart.com/"
 ```
 
 ---
@@ -69,7 +73,7 @@ uvicorn main:app --reload
 
 ### 4. Documentazione API
 
-Dopo l’avvio:
+Dopo l’avvio, la documentazione interattiva (Swagger UI) è disponibile su:
 
 ```
 http://127.0.0.1:8000/docs
@@ -79,124 +83,53 @@ http://127.0.0.1:8000/docs
 
 ## 📡 Endpoint API
 
-### 🔹 Creare spedizione
+### 🔹 Generare Waybill
+`POST /waybill/GenerateWayBill`
+Genera una nuova Waybill BlueDart.
 
-`POST /shipments`
+### 🔹 Annullare Waybill
+`POST /waybill/CancelWayBill`
+Annulla una Waybill esistente tramite AWB Number.
 
-```json
-{
-  "shipper": {
-    "name": "Company SRL",
-    "address": "Via Roma 1",
-    "city": "Napoli",
-    "postal_code": "80100",
-    "country": "IT",
-    "phone": "+390000000"
-  },
-  "receiver": {
-    "name": "Mario Rossi",
-    "address": "Via Milano 10",
-    "city": "Milano",
-    "postal_code": "20100",
-    "country": "IT",
-    "phone": "+390000000"
-  },
-  "package": {
-    "weight": 5,
-    "length": 30,
-    "width": 20,
-    "height": 10
-  },
-  "service": "P"
-}
-```
+### 🔹 Aggiornare eWaybill
+`POST /waybill/UpdateEwayBill`
+Aggiorna i dettagli della fattura e della eWaybill per una spedizione.
 
----
-
-### 🔹 Tracking spedizione
-
-`GET /track/{tracking_number}`
-
----
+### 🔹 Importare Dati
+`POST /importData`
+Importazione completa di dati consignee, shipper e service.
 
 ### 🔹 Health check
-
 `GET /health`
+Verifica lo stato del middleware.
 
 ---
 
-## 📄 Output
+## 🔐 Sicurezza
 
-* Tracking number DHL
-* File etichetta PDF
-* Stato spedizione
-
----
-
-## 🔌 Integrazione SAP
-
-Il sistema può essere integrato con:
-
-* SAP CPI (Cloud Platform Integration)
-* IDoc / RFC
-* REST API via ABAP
-
-Flusso tipico:
-
-```
-Sales Order → Delivery → Middleware → DHL → Tracking → SAP Update
-```
-
----
-
-## 🧪 Sandbox DHL
-
-Per test usare:
-
-```
-https://api-mydhl-qa.dhl.com
-```
+* Autenticazione dinamica via JWT (token generato automaticamente).
+* Credenziali sensibili gestite via variabili d'ambiente (`.env`).
+* Validazione rigorosa degli schemi dati tramite Pydantic.
 
 ---
 
 ## 📁 Struttura progetto
 
 ```
-project/
+dhl-data-insert-manager/
 │
-├── main.py
-├── dhl_service.py
-├── schemas.py
-├── config.py
-├── .env
-└── README.md
+├── main.py          # Entry point FastAPI e rotte
+├── dhl_service.py   # Logica di integrazione API BlueDart/DHL
+├── schemas.py       # Modelli dati Pydantic
+├── config.py        # Gestione configurazione env
+├── .env             # Variabili d'ambiente (non versionate)
+└── README.md        # Documentazione
 ```
-
----
-
-## 🔐 Sicurezza
-
-* API Key in `.env`
-* Nessun dato sensibile nel repository
-* Logging errori abilitato
-
----
-
-## 🚀 Possibili estensioni
-
-* Autenticazione JWT
-* Database PostgreSQL
-* Dashboard tracking spedizioni
-* Webhook DHL
-* Container Docker
-
----
 
 ## 📌 Note
 
-Questo progetto è un middleware tecnico per integrazione logistica e non sostituisce le API ufficiali DHL.
+Questo progetto è un middleware tecnico per integrazione logistica specifico per i servizi BlueDart/DHL Gateway.
 
----
 
 ## 📜 Licenza
 

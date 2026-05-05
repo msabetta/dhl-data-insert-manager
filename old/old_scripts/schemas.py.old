@@ -1,0 +1,134 @@
+# schemas.py
+from pydantic import BaseModel
+from typing import List, Optional, Any
+
+class Profile(BaseModel):
+    LoginID: str
+    LicenceKey: str
+    Api_type: str
+    Area: Optional[str] = None
+    Version: Optional[str] = None
+    Customercode: Optional[str] = None
+    IsAdmin: Optional[bool] = None
+
+class Consignee(BaseModel):
+    ConsigneeName: str
+    ConsigneeAddress1: str
+    ConsigneeAddress2: Optional[str] = ""
+    ConsigneeAddress3: Optional[str] = ""
+    ConsigneePincode: str
+    ConsigneeMobile: str
+    ConsigneeEmailID: Optional[str] = ""
+    ConsigneeFullAddress: Optional[str] = ""
+    ConsigneeGSTNumber: Optional[str] = ""
+    ConsigneeLatitude: Optional[str] = ""
+    ConsigneeLongitude: Optional[str] = ""
+    ConsigneeAddressinfo: Optional[str] = ""
+    ConsigneeAttention: Optional[str] = ""
+    ConsigneeStateCode: Optional[str] = ""
+    ConsigneeTelephone: Optional[str] = ""
+    ConsigneeMaskedContactNumber: Optional[str] = ""
+    ConsigneeAddressType: Optional[str] = ""
+
+class Shipper(BaseModel):
+    CustomerName: str
+    CustomerAddress1: str
+    CustomerAddress2: Optional[str] = ""
+    CustomerAddress3: Optional[str] = ""
+    CustomerPincode: str
+    CustomerMobile: str
+    CustomerEmailID: Optional[str] = ""
+    CustomerTelephone: Optional[str] = ""
+    CustomerCode: str
+    OriginArea: str
+    IsToPayCustomer: Optional[bool] = False
+    Sender: Optional[str] = ""
+    VendorCode: Optional[str] = ""
+    CustomerGSTNumber: Optional[str] = ""
+    CustomerLatitude: Optional[str] = ""
+    CustomerLongitude: Optional[str] = ""
+    CustomerMaskedContactNumber: Optional[str] = ""
+
+class ServiceDetails(BaseModel):
+    ProductCode: str
+    ProductType: int
+    SubProductCode: str
+    PieceCount: Any
+    ActualWeight: Any
+    PackType: Optional[str] = ""
+    PickupDate: Optional[str] = ""
+    PickupTime: Optional[str] = ""
+    DeclaredValue: float
+    SpecialInstruction: Optional[str] = ""
+    Dimensions: Optional[List[dict]] = []
+    Commodity: Optional[dict] = {}
+    CreditReferenceNo: Optional[str] = ""
+    CreditReferenceNo2: Optional[str] = ""
+    CreditReferenceNo3: Optional[str] = ""
+    IsReversePickup: Optional[bool] = False
+    RegisterPickup: Optional[bool] = True
+    PDFOutputNotRequired: Optional[bool] = True
+    ItemCount: Optional[int] = 1
+    itemImg: Optional[List[dict]] = []
+    itemdtl: Optional[List[dict]] = []
+    CollectableAmount: Optional[float] = 0
+    DeliveryTimeSlot: Optional[str] = ""
+    DynamicQCDetails: Optional[List[dict]] = []
+    FavouringName: Optional[str] = ""
+    ForwardAWBNo: Optional[str] = ""
+    ForwardLogisticCompName: Optional[str] = ""
+    InsurancePaidBy: Optional[str] = ""
+    InvoiceNo: Optional[str] = ""
+    IsChequeDD: Optional[str] = ""
+    IsDedicatedDeliveryNetwork: Optional[bool] = False
+    IsForcePickup: Optional[bool] = False
+    IsPartialPickup: Optional[bool] = False
+    Officecutofftime: Optional[str] = ""
+    ParcelShopCode: Optional[str] = ""
+    PayableAt: Optional[str] = ""
+    PickupType: Optional[str] = "O"
+    PreferredPickupTimeSlot: Optional[str] = ""
+    ProductFeature: Optional[str] = ""
+    TotalCashPaytoCustomer: Optional[float] = 0
+    AWBNo: Optional[str] = ""
+    noOfDCGiven: Optional[int] = 0
+
+class WayBillRequestData(BaseModel):
+    Consignee: Consignee
+    Shipper: Shipper
+    Services: ServiceDetails
+    Returnadds: Optional[dict] = {}
+
+class GenerateWayBillRequest(BaseModel):
+    Request: WayBillRequestData
+    Profile: Profile
+
+class CancelRequest(BaseModel):
+    AWBNo: str
+
+class CancelWayBillRequest(BaseModel):
+    Request: CancelRequest
+    Profile: Profile
+
+class UpdateEwayBillData(BaseModel):
+    Waybillnumber: str
+    InvoiceNumber: str
+    InvoiceDate: str
+    SellerGSTNo: str
+    eWaybillNumber: str
+    eWaybillDate: str
+
+class UpdateWayBillRequest(BaseModel):
+    ERequest: UpdateEwayBillData
+    Profile: Profile
+
+class ImportDataRequest(BaseModel):
+    Request: List[WayBillRequestData]
+    Profile: Profile
+
+# Mantengo questi per compatibilità o utilizzi futuri semplificati
+class ShipmentRequest(BaseModel):
+    shipper: dict
+    receiver: dict
+    package: dict
+    service: dict
